@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nina's Expenses</title>
+<style>
+:root{--bg:#0b0e13;--panel:#121821;--panel2:#171f2b;--line:#263244;--text:#edf2f8;--muted:#91a0b4;--gold:#d8b878;--green:#6fd0a4;--red:#f18b8b;--blue:#8fb8f5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#182232 0,#0b0e13 55%);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1180px;margin:auto;padding:34px 22px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:13px}.mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#e7cc96,#9b7741);display:grid;place-items:center;color:#17130d;font-weight:900;font-size:20px;box-shadow:0 8px 30px #c6a56a30}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}.brand h1{font-size:25px;letter-spacing:-.04em;margin:1px 0 0}.top-actions{display:flex;gap:9px;flex-wrap:wrap}
+button,.btn{border:1px solid var(--line);background:#1a2431;color:var(--text);padding:10px 14px;border-radius:10px;font:inherit;font-weight:650;cursor:pointer;transition:.15s}button:hover,.btn:hover{border-color:#65748a;background:#202d3d}button.primary{background:var(--gold);color:#17130d;border-color:var(--gold)}button.danger{color:var(--red)}button.small{padding:7px 10px;font-size:12px}button:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}.card{background:linear-gradient(160deg,#151e29,#10161f);border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:0 12px 35px #0002}.metric-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}.metric{font-size:29px;font-weight:750;letter-spacing:-.04em;margin-top:6px}.metric.gold{color:var(--gold)}.metric.green{color:var(--green)}.metric.red{color:var(--red)}
+.controls{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px;margin-bottom:18px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;color:var(--muted);font-weight:650}.field input,.field select,.field textarea{width:100%;background:#0c121a;border:1px solid #2b394c;border-radius:9px;color:var(--text);padding:11px 12px;font:inherit;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d8b87818}.field input::placeholder{color:#617087}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}.section-head h2{font-size:17px;margin:0;letter-spacing:-.02em}.sub{color:var(--muted);font-size:12px}.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.add-row{display:grid;grid-template-columns:1fr 1.4fr .8fr auto;gap:9px;align-items:end;margin:15px 0 18px}.category-list{display:grid;grid-template-columns:1fr 1fr;gap:13px}.category{border:1px solid var(--line);background:#111923;border-radius:14px;overflow:hidden}.cat-head{padding:14px 15px;background:#182230;display:flex;justify-content:space-between;gap:10px;align-items:center}.cat-name{font-weight:750}.cat-total{color:var(--gold);font-weight:750;white-space:nowrap}.cat-body{padding:12px 14px}.expense{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #253142}.expense:last-child{border:0}.expense-desc{font-size:13px}.expense-amount{font-weight:700;font-variant-numeric:tabular-nums}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed #344256;border-radius:13px}.cat-empty{font-size:12px;color:#75849a;padding:5px 0}.summary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.summary .card{padding:17px}.summary-line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;color:#c7d0dc;border-bottom:1px solid #253142}.summary-line:last-child{border:0}.summary-line strong{font-variant-numeric:tabular-nums}.history-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto}.history-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;background:#0e151e;border:1px solid #273448;border-radius:10px}.history-item small{color:var(--muted);display:block}.notice{color:var(--muted);font-size:12px;margin-top:16px}.status{font-size:12px;color:var(--green);min-height:18px}.hidden{display:none!important}
+@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr 1fr}.category-list{grid-template-columns:1fr}.summary{grid-template-columns:1fr}}
+@media(max-width:560px){.wrap{padding:22px 13px 40px}.top{align-items:flex-start;flex-direction:column}.grid,.controls{grid-template-columns:1fr 1fr}.metric{font-size:23px}.add-row{grid-template-columns:1fr 1fr}.add-row .field:nth-child(2){grid-column:span 2}.add-row button{height:43px}.grid .card:last-child{grid-column:span 2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="mark">N</div><div><div class="eyebrow">Personal finance tracker</div><h1>Nina's Expenses</h1></div></div>
+    <div class="top-actions">
+      <button id="exportBtn">Export backup</button>
+      <button id="importBtn">Restore backup</button>
+      <input id="importFile" type="file" accept="application/json,.json" class="hidden">
+    </div>
+  </header>
+
+  <section class="grid">
+    <div class="card"><div class="metric-label">Salary · selected cutoff</div><div class="metric gold" id="salaryMetric">₱0.00</div><div class="sub" id="cutoffLabel">Choose a cutoff below</div></div>
+    <div class="card"><div class="metric-label">Total expenses</div><div class="metric" id="spentMetric">₱0.00</div><div class="sub" id="expenseCount">0 expense entries</div></div>
+    <div class="card"><div class="metric-label">Available for savings</div><div class="metric green" id="savingsMetric">₱0.00</div><div class="sub">Salary less recorded expenses</div></div>
+  </section>
+
+  <section class="card" style="margin-bottom:18px">
+    <div class="section-head"><h2>Cutoff details</h2><span class="sub" id="saveStatus">Automatically saved in this browser</span></div>
+    <div class="controls">
+      <div class="field"><label for="monthSelect">MONTH</label><input type="month" id="monthSelect"></div>
+      <div class="field"><label for="cutoffSelect">SALARY CUTOFF</label><select id="cutoffSelect"><option value="1">1st cutoff · 1–15</option><option value="2">2nd cutoff · 16–end</option></select></div>
+      <div class="field"><label for="salaryInput">SALARY FOR THIS CUTOFF (₱)</label><input id="salaryInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 15000"></div>
+    </div>
+    <div class="toolbar">
+      <button class="primary" id="saveSalaryBtn">Save cutoff details</button>
+      <button id="copyBtn">Copy from another cutoff</button>
+    </div>
+    <div class="notice">Your records are saved automatically in this browser as you type. Choose a month and cutoff to view or edit that period.</div>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><h2>Expense categories</h2><div class="sub">Create your own categories and add individual expenses under each one.</div></div><div class="sub" id="categoryCount">0 categories</div></div>
+    <div class="add-row">
+      <div class="field"><label for="newCategory">NEW CATEGORY</label><input id="newCategory" placeholder="e.g. EW CC, Grocery"></div>
+      <div class="field"><label for="expenseDescription">EXPENSE SUMMARY / WHAT FOR</label><input id="expenseDescription" placeholder="e.g. Supermarket, monthly bill"></div>
+      <div class="field"><label for="expenseAmount">AMOUNT (₱)</label><input id="expenseAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+      <button class="primary" id="addExpenseBtn">Add expense</button>
+    </div>
+    <div class="sub" style="margin:-7px 0 12px">To add an expense, choose an existing category from the category field below, or type a new category name.</div>
+    <div class="field" style="max-width:420px;margin-bottom:14px"><label for="categorySelect">CATEGORY FOR NEXT EXPENSE</label><select id="categorySelect"><option value="">Choose or create a category below</option></select></div>
+    <div id="categoryList" class="category-list"><div class="empty">No categories yet. Add your first category and expense above.</div></div>
+  </section>
+
+  <section class="summary">
+    <div class="card"><div class="section-head"><div><h2>Cutoff breakdown</h2><div class="sub" id="breakdownPeriodLabel">Selected cutoff</div></div><span class="sub">By category</span></div><div id="breakdown"><div class="sub">No expenses recorded yet.</div></div></div>
+    <div class="card"><div class="section-head"><h2>Monthly history</h2><span class="sub">Saved cutoffs</span></div><div id="history" class="history-list"></div></div>
+  </section>
+  <p class="notice">Backup tip: export a JSON backup regularly and keep it somewhere safe. Browser storage stays on this device and browser; clearing browser data or switching devices can remove or hide these records. Restoring a backup replaces the saved tracker data.</p>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'ninasExpenses_v2';
+  const $ = id => document.getElementById(id);
+  const money = n => new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP'}).format(Number(n)||0);
+  const currentMonth = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; };
+  const formatMonth = value => { const [year,month]=String(value).split('-').map(Number); return new Date(year,month-1,1).toLocaleDateString('en-PH',{month:'long',year:'numeric'}); };
+  let db = loadDB();
+  let activeKey = '';
+  function loadDB(){
+    try { const parsed=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); return parsed && parsed.periods ? parsed : {version:2,periods:{}}; }
+    catch(e){ return {version:2,periods:{}}; }
+  }
+  function periodKey(){ return `${$('monthSelect').value}|${$('cutoffSelect').value}`; }
+  function period(){ if(!db.periods[activeKey]) db.periods[activeKey]={salary:0,categories:[]}; return db.periods[activeKey]; }
+  function saveDB(){
+    try { localStorage.setItem(STORAGE_KEY,JSON.stringify(db)); $('saveStatus').textContent='Saved just now'; $('saveStatus').style.color='var(--green)'; }
+    catch(e){ $('saveStatus').textContent='Could not save — browser storage may be full'; $('saveStatus').style.color='var(--red)'; }
+  }
+  function safeText(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function activate(){
+    if(!$('monthSelect').value) $('monthSelect').value=currentMonth();
+    activeKey=periodKey();
+    const p=period();
+    $('salaryInput').value=p.salary || '';
+    render();
+  }
+  function total(p){ return p.categories.reduce((sum,c)=>sum+c.expenses.reduce((s,e)=>s+Number(e.amount||0),0),0); }
+  function render(){
+    const p=period(), spent=total(p), salary=Number(p.salary)||0, count=p.categories.reduce((s,c)=>s+c.expenses.length,0);
+    $('salaryMetric').textContent=money(salary); $('spentMetric').textContent=money(spent);
+    $('savingsMetric').textContent=money(salary-spent);
+    $('savingsMetric').className='metric '+(salary-spent<0?'red':'green');
+    const cutoffName=$('cutoffSelect').value==='1'?'1st cutoff (1–15)':'2nd cutoff (16–end)';
+    $('cutoffLabel').textContent=`${formatMonth($('monthSelect').value)} · ${cutoffName}`;
+    $('breakdownPeriodLabel').textContent=`${formatMonth($('monthSelect').value)} · ${cutoffName}`;
+    $('expenseCount').textContent=`${count} expense ${count===1?'entry':'entries'}`;
+    $('categoryCount').textContent=`${p.categories.length} categor${p.categories.length===1?'y':'ies'}`;
+    const sel=$('categorySelect'), old=sel.value;
+    sel.innerHTML='<option value="">Choose a category</option>'+p.categories.map(c=>`<option value="${safeText(c.id)}">${safeText(c.name)}</option>`).join('');
+    if(p.categories.some(c=>c.id===old)) sel.value=old;
+    const list=$('categoryList');
+    if(!p.categories.length) list.innerHTML='<div class="empty" style="grid-column:1/-1">No categories yet. Type a category name above, enter the expense details, and select Add expense.</div>';
+    else list.innerHTML=p.categories.map(c=>{
+      const sum=c.expenses.reduce((s,e)=>s+Number(e.amount||0),0);
+      const rows=c.expenses.length?c.expenses.map(e=>`<div class="expense"><div class="expense-desc">${safeText(e.description)}</div><div class="expense-amount">${money(e.amount)}</div><div style="display:flex;gap:5px"><button class="small" data-edit-expense="${safeText(c.id)}:${safeText(e.id)}" title="Edit expense">Edit</button><button class="small danger" data-delete-expense="${safeText(c.id)}:${safeText(e.id)}" title="Delete expense">✕</button></div></div>`).join(''):'<div class="cat-empty">No expenses in this category yet.</div>';
+      return `<article class="category"><div class="cat-head"><div><div class="cat-name">${safeText(c.name)}</div><div class="sub">${c.expenses.length} item${c.expenses.length===1?'':'s'}</div></div><div style="display:flex;align-items:center;gap:9px"><span class="cat-total">${money(sum)}</span><button class="small danger" data-delete-category="${safeText(c.id)}" title="Delete category">✕</button></div></div><div class="cat-body">${rows}</div></article>`;
+    }).join('');
+    $('breakdown').innerHTML=p.categories.length?p.categories.map(c=>`<div class="summary-line"><span>${safeText(c.name)}</span><strong>${money(c.expenses.reduce((s,e)=>s+Number(e.amount||0),0))}</strong></div>`).join('')+`<div class="summary-line" style="padding-top:12px;color:var(--gold)"><strong>Total expenses</strong><strong>${money(spent)}</strong></div>`:'<div class="sub">No expenses recorded yet.</div>';
+    renderHistory();
+  }
+  function renderHistory(){
+    const entries=Object.entries(db.periods).filter(([k,v])=>v && (Number(v.salary)>0 || (v.categories||[]).length)).sort((a,b)=>b[0].localeCompare(a[0]));
+    $('history').innerHTML=entries.length?entries.map(([k,v])=>{
+      const [month,cutoff]=k.split('|'), spent=total(v);
+      return `<div class="history-item"><div><strong>${safeText(formatMonth(month))} · ${cutoff==='1'?'1st':'2nd'} cutoff</strong><small>Salary ${money(v.salary)} · Spent ${money(spent)}</small></div><button class="small" data-open-period="${safeText(k)}">Open</button></div>`;
+    }).join(''):'<div class="sub">Your saved cutoffs will appear here.</div>';
+  }
+  function addCategory(name){
+    const p=period(); name=name.trim();
+    if(!name) return null;
+    let found=p.categories.find(c=>c.name.toLowerCase()===name.toLowerCase());
+    if(found) return found;
+    const c={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),name,expenses:[]};
+    p.categories.push(c); return c;
+  }
+  $('monthSelect').value=currentMonth();
+  $('monthSelect').addEventListener('change',activate);
+  $('cutoffSelect').addEventListener('change',activate);
+  $('salaryInput').addEventListener('input',()=>{period().salary=Math.max(0,Number($('salaryInput').value)||0);saveDB();render();});
+  $('saveSalaryBtn').addEventListener('click',()=>{period().salary=Math.max(0,Number($('salaryInput').value)||0);saveDB();render();});
+  $('addExpenseBtn').addEventListener('click',()=>{
+    const typed=$('newCategory').value.trim(), selected=$('categorySelect').value;
+    const description=$('expenseDescription').value.trim(), raw=$('expenseAmount').value;
+    const amount=Number(raw);
+    if(!typed && !selected){alert('Please type a category name or choose an existing category.');return;}
+    if(!description){alert('Please enter what the expense was for.');$('expenseDescription').focus();return;}
+    if(raw==='' || !Number.isFinite(amount) || amount<=0){alert('Please enter an amount greater than zero.');$('expenseAmount').focus();return;}
+    const c=typed?addCategory(typed):period().categories.find(x=>x.id===selected);
+    if(!c){alert('Please choose a valid category.');return;}
+    c.expenses.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),description,amount});
+    $('newCategory').value='';$('expenseDescription').value='';$('expenseAmount').value='';
+    saveDB();render();$('categorySelect').value=c.id;
+  });
+  $('categoryList').addEventListener('click',e=>{
+    const editExp=e.target.closest('[data-edit-expense]');
+    const delExp=e.target.closest('[data-delete-expense]');
+    const delCat=e.target.closest('[data-delete-category]');
+    if(editExp){
+      const [cid,eid]=editExp.dataset.editExpense.split(':');
+      const c=period().categories.find(x=>x.id===cid);
+      const expense=c?.expenses.find(x=>x.id===eid);
+      if(expense){
+        const newDescription=prompt('Edit expense name / summary:',expense.description);
+        if(newDescription===null)return;
+        const cleanedDescription=newDescription.trim();
+        if(!cleanedDescription){alert('Expense name cannot be empty.');return;}
+        const newAmountText=prompt('Edit expense amount (₱):',String(expense.amount));
+        if(newAmountText===null)return;
+        const newAmount=Number(newAmountText);
+        if(newAmountText.trim()==='' || !Number.isFinite(newAmount) || newAmount<=0){alert('Please enter an amount greater than zero.');return;}
+        expense.description=cleanedDescription;
+        expense.amount=newAmount;
+        saveDB();render();
+      }
+      return;
+    }
+    if(delExp){const [cid,eid]=delExp.dataset.deleteExpense.split(':');const c=period().categories.find(x=>x.id===cid);if(c){c.expenses=c.expenses.filter(x=>x.id!==eid);saveDB();render();}}
+    if(delCat){const c=period().categories.find(x=>x.id===delCat.dataset.deleteCategory);if(c&&confirm(`Delete "${c.name}" and all its expenses?`)){period().categories=period().categories.filter(x=>x.id!==c.id);saveDB();render();}}
+  });
+  $('history').addEventListener('click',e=>{
+    const b=e.target.closest('[data-open-period]');if(!b)return;
+    const [month,cutoff]=b.dataset.openPeriod.split('|');$('monthSelect').value=month;$('cutoffSelect').value=cutoff;activate();
+  });
+  $('copyBtn').addEventListener('click',()=>{
+    const keys=Object.keys(db.periods).filter(k=>k!==activeKey && db.periods[k]?.categories?.length).sort().reverse();
+    if(!keys.length){alert('There are no other saved cutoffs with categories to copy yet.');return;}
+    const choice=prompt('Enter the number of the cutoff to copy:\\n'+keys.map((k,i)=>`${i+1}. ${k.replace('|',' · cutoff ')}`).join('\\n'));
+    if(choice===null)return;
+    const idx=Number(choice)-1;if(!Number.isInteger(idx)||idx<0||idx>=keys.length){alert('Invalid selection. Nothing was copied.');return;}
+    const source=db.periods[keys[idx]];
+    if(!confirm('Copy all categories and their expense entries into this cutoff? Existing categories and expenses in this cutoff will be replaced.'))return;
+    period().categories=JSON.parse(JSON.stringify(source.categories));
+    saveDB();render();alert('Categories and expenses copied successfully.');
+  });
+  $('exportBtn').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify({app:'Ninas Expenses',version:2,exportedAt:new Date().toISOString(),data:db},null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ninas-expenses-backup-${currentMonth()}.json`;a.click();URL.revokeObjectURL(url);
+  });
+  $('importBtn').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try{
+      const parsed=JSON.parse(await file.text()), incoming=parsed.data||parsed;
+      if(!incoming || typeof incoming.periods!=='object' || Array.isArray(incoming.periods))throw new Error('Invalid backup format');
+      for(const [k,v] of Object.entries(incoming.periods)){
+        if(!/^\d{4}-\d{2}\|[12]$/.test(k)||!v||!Array.isArray(v.categories))throw new Error('Invalid backup data');
+        v.salary=Math.max(0,Number(v.salary)||0);
+        v.categories=v.categories.map(c=>({id:String(c.id||Date.now()+Math.random()),name:String(c.name||'Unnamed category'),expenses:Array.isArray(c.expenses)?c.expenses.map(x=>({id:String(x.id||Date.now()+Math.random()),description:String(x.description||''),amount:Math.max(0,Number(x.amount)||0)})):[]}));
+      }
+      if(!confirm('Restore this backup? This will replace all current Nina’s Expenses data in this browser.'))return;
+      db={version:2,periods:incoming.periods};saveDB();activate();alert('Backup restored successfully.');
+    }catch(err){alert('Could not restore this file. Please choose a valid Nina’s Expenses JSON backup.');}
+    finally{$('importFile').value='';}
+  });
+  activate();
+})();
+</script>
+</body>
+</html>
